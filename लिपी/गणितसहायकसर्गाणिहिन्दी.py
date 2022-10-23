@@ -1,5 +1,5 @@
 import pandas as pd
-from Boli1 import *
+from दाक्षिलिपीहिन्दी import *
 
 def पदस्थान(a_list, value):
     try:
