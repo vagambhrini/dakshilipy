@@ -1,0 +1,12 @@
+name: dakshilipy
+channels:
+  - anaconda
+  - defaults
+dependencies:
+  - jupyter>=1.0.0
+  - pandas>=1.4.4
+  - python=3.9.13
+  - pip>=22.2.2
+  - pip:
+    - ideas>=0.1.3
+    - token-utils>=0.1.8
