@@ -89,21 +89,16 @@ for k, v in hi_to_py_first.items():
 
 
 def untokenize(tokens):
-    """Return source code based on tokens.
-    Adapted from https://github.com/myint/untokenize,
-    Copyright (C) 2013-2018 Steven Myint, MIT License (same as this project).
-    This is similar to Python's own tokenize.untokenize(), except that it
-    preserves spacing between tokens, by using the line
-    information recorded by Python's tokenize.generate_tokens.
-    As a result, if the original soure code had multiple spaces between
-    some tokens or if escaped newlines were used or if tab characters
-    were present in the original source, those will also be present
-    in the source code produced by untokenize.
-    Thus ``source == untokenize(tokenize(source))``.
-    Note: if you you modifying tokens from an original source:
-    Instead of full token object, ``untokenize`` will accept simple
-    strings; however, it will only insert them *as is* without taking them
-    into account when it comes with figuring out spacing between tokens.
+    """टोकनों से स्रोत कोड पुनर्निर्मित करें।
+
+    https://github.com/myint/untokenize से अनुकूलित,
+    कॉपीराइट (C) 2013-2018 Steven Myint, MIT लाइसेंस।
+
+    यह पायथन के tokenize.untokenize() के समान है, परन्तु यह टोकनों के
+    मध्य रिक्त स्थान को सुरक्षित रखता है। यदि मूल स्रोत में अनेक रिक्त स्थान,
+    एस्केप न्यूलाइन, या टैब थे, तो वे भी सुरक्षित रहेंगे।
+
+    अतः: ``स्रोत == untokenize(tokenize(स्रोत))``
     """
     words = []
     previous_line = ""
@@ -181,8 +176,10 @@ def collapse(curStack, indices, new_tokens):
         #print("trini: ", new_tokens)
     
 def transform_source१(source, **_kwargs):
-    """A simple replacement of 'French Python keyword' by their normal
-    English version.
+    """हिन्दी/संस्कृत कुञ्जीशब्दों को पायथन कुञ्जीशब्दों में रूपान्तरित करें।
+
+    यह सर्ग स्रोत कोड में हिन्दी शब्दों को उनके अंग्रेज़ी पायथन समतुल्यों से
+    प्रतिस्थापित करता है (जैसे: यदि → if, सर्ग → def, इत्यादि)।
     """
     new_tokens = []
     matches = []
@@ -222,8 +219,10 @@ def transform_source१(source, **_kwargs):
     return new_source
 
 def add_hook१(**_kwargs):
-    """Creates and adds the import hook in sys.meta_path.
-    Uses a custom extension for the exception hook."""
+    """sys.meta_path में आयात हुक जोड़ें।
+
+    .pyhi विस्तार वाली फ़ाइलों के लिए हिन्दी→पायथन रूपान्तरण सक्षम करता है।
+    """
     hook = import_hook.create_hook(
         transform_source=transform_source१,
         hook_name='sanskrit',
@@ -236,7 +235,10 @@ def add_hook१(**_kwargs):
 
 
 class VistarSyntaxError(Exception):
-    """Currently, only raised when a repeat statement has a missing colon."""
+    """विस्तार वाक्यरचना त्रुटि।
+
+    जब 'विस्तार' कथन में अन्त में ':' का अभाव हो, तब उत्पन्न होती है।
+    """
 
     pass
 
@@ -291,10 +293,13 @@ def transform_source२(source, **_kwargs):
 
 
 def add_hook२(predictable_names=False, **_kwargs):
-    """Creates and adds the import hook in sys.meta_path.
-    If ``predictable_names`` is set to ``True``, a callback parameter
-    passed to the source transformation function will be used to
-    create variable loops with predictable names."""
+    """sys.meta_path में द्वितीय आयात हुक जोड़ें।
+
+    यह हुक 'क्रमशः...का विस्तार' जैसी हिन्दी लूप वाक्यरचना को
+    मानक पायथन for लूप में रूपान्तरित करता है।
+
+    यदि ``predictable_names`` सत हो, तो चर नाम पूर्वानुमेय होंगे।
+    """
     callback_params = {"predictable_names": predictable_names}
     hook = import_hook.create_hook(
         transform_source=transform_source२,
